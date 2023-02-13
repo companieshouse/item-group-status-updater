@@ -1,0 +1,5 @@
+app_name: item-group-status-updater
+group: api
+weight: 915
+routes:
+  1: ^/item-group-status-updater/healthcheck
