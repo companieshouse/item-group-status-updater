@@ -1,17 +1,15 @@
 package uk.gov.companieshouse.itemgroupstatusupdater.service;
 
 import static java.util.Collections.singletonList;
-import static org.springframework.http.MediaType.APPLICATION_JSON;
 
 import java.util.Map;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpMethod;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.RestClientException;
-import org.springframework.web.client.RestTemplate;
-import uk.gov.companieshouse.itemgroupstatusupdater.dto.ItemStatusUpdateDto;
+import org.springframework.web.util.UriTemplate;
+import uk.gov.companieshouse.api.error.ApiErrorResponseException;
+import uk.gov.companieshouse.api.handler.exception.URIValidationException;
+import uk.gov.companieshouse.api.model.order.item.ItemStatusUpdateApi;
+import uk.gov.companieshouse.itemgroupstatusupdater.exception.NonRetryableException;
+import uk.gov.companieshouse.itemgroupstatusupdater.exception.RetryableException;
 import uk.gov.companieshouse.logging.Logger;
 import uk.gov.companieshouse.logging.util.DataMap;
 
@@ -22,25 +20,18 @@ import uk.gov.companieshouse.logging.util.DataMap;
 @Service
 public class PatchOrderedItemService {
 
-    // TODO DCAC-216: Replace temporary test code with a private SDK based implementation.
+    private static final UriTemplate PATCH_ORDERED_ITEM_URL = new UriTemplate(
+        "/orders/{orderNumber}/items/{itemId}");
 
-    private final RestTemplate restTemplate;
+    private final ApiClientService apiClientService;
 
     private final Logger logger;
 
-    private final String chsApiUrl;
-
-    private final String chsApiKey;
-
     public PatchOrderedItemService(
-        RestTemplate restTemplate,
-        Logger logger,
-        @Value("${chs.api.url}") String chsApiUrl,
-        @Value("${chs.api.key}") String chsApiKey) {
-        this.restTemplate = restTemplate;
+        ApiClientService apiClientService,
+        Logger logger) {
+        this.apiClientService = apiClientService;
         this.logger = logger;
-        this.chsApiUrl = chsApiUrl;
-        this.chsApiKey = chsApiKey;
     }
 
     public void patchOrderedItem(
@@ -48,35 +39,37 @@ public class PatchOrderedItemService {
         final String itemId,
         final String status,
         final String digitalDocumentLocation) {
-
-        final var headers = new HttpHeaders();
-        headers.setContentType(APPLICATION_JSON);
-        headers.setAccept(singletonList(APPLICATION_JSON));
-        headers.setBasicAuth(chsApiKey);
-        final var update = new ItemStatusUpdateDto(status, digitalDocumentLocation);
-        final HttpEntity<ItemStatusUpdateDto> httpEntity = new HttpEntity<>(update, headers);
-
-        try {
-            restTemplate.exchange(
-                chsApiUrl + orderedItemUrl(orderNumber, itemId),
-                HttpMethod.PATCH,
-                httpEntity,
-                Void.class);
-            logger.info("Item status update propagation successful for order number "
-                + orderNumber + ", item " + itemId + ".",
-                getLogMap(orderNumber, itemId, status, digitalDocumentLocation));
-        } catch (RestClientException rce) {
-            final String error = "Item status update propagation FAILED for order number "
-                + orderNumber + ", item " + itemId + ", caught RestClientException with message "
-                + rce.getMessage() + ".";
-            logger.error(error,
-                getLogMap(orderNumber, itemId, status, digitalDocumentLocation, rce.getMessage()));
-            // TODO DCAC-216: throw new WhatException(error);?
-        }
+        final var uri = PATCH_ORDERED_ITEM_URL.expand(orderNumber, itemId).toString();
+        logger.info("Patching ordered item at " + uri + ".",
+            getLogMap(orderNumber, itemId, status, digitalDocumentLocation));
+        patchOrderedItem(uri, orderNumber, itemId, status, digitalDocumentLocation);
     }
 
-    private String orderedItemUrl(final String orderNumber, final String itemId) {
-        return "/orders/" + orderNumber + "/items/" + itemId;
+    private void patchOrderedItem(
+        final String uri,
+        final String orderNumber,
+        final String itemId,
+        final String status,
+        final String digitalDocumentLocation) {
+
+        final var apiClient = apiClientService.getInternalApiClient();
+        final var update = new ItemStatusUpdateApi(status, digitalDocumentLocation);
+
+        try {
+            // TODO DCAC-216 Do we want the response payload? ...getData();
+            apiClient.privateOrderResourceHandler().patchOrderedItem(uri, update).execute();
+        } catch (ApiErrorResponseException ex) {
+            final String error = "Error sending request to " + uri + " for patch ordered item.";
+            logger.error(error, ex,
+                getLogMap(orderNumber, itemId, status, digitalDocumentLocation, error));
+            throw new RetryableException(error, ex);
+        } catch (URIValidationException ex) {
+            // Should this happen (unlikely), it is a programmatic error, hence not recoverable.
+            final String error = "Invalid URI " + uri + " for patch ordered item.";
+            logger.error(error, ex,
+                getLogMap(orderNumber, itemId, status, digitalDocumentLocation, error));
+            throw new NonRetryableException(error, ex);
+        }
     }
 
     private Map<String, Object> getLogMap(

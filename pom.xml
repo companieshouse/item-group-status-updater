@@ -29,6 +29,8 @@
 		<sonar-maven-plugin.version>3.4.0.905</sonar-maven-plugin.version>
 		<!-- Structured logging -->
 		<structured-logging.version>1.9.27</structured-logging.version>
+		<!-- TODO DCAC-216 > 1.0.7 -->
+		<api-sdk-manager-java-library.version>unversioned</api-sdk-manager-java-library.version>
 	</properties>
 
 	<dependencyManagement>
@@ -52,11 +54,10 @@
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-web</artifactId>
 		</dependency>
-		<!-- TODO DCAC-216: Remove this with RestTemplate? -->
 		<dependency>
-			<groupId>org.apache.httpcomponents</groupId>
-			<artifactId>httpclient</artifactId>
-			<version>4.5.14</version>
+			<groupId>uk.gov.companieshouse</groupId>
+			<artifactId>api-sdk-manager-java-library</artifactId>
+			<version>${api-sdk-manager-java-library.version}</version>
 		</dependency>
 
 		<dependency>
