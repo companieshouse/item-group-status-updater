@@ -58,7 +58,9 @@ public class PatchOrderedItemService {
         try {
             apiClient.privateOrderResourceHandler().patchOrderedItem(uri, update).execute();
         } catch (ApiErrorResponseException ex) {
-            final String error = "Error sending request to " + uri + " for patch ordered item.";
+            final String error = "Received unexpected response status code " + ex.getStatusCode()
+                + ", and status message '" + ex.getStatusMessage()
+                + "' sending request to patch ordered item at " + uri + ".";
             logger.error(error, ex,
                 getLogMap(orderNumber, itemId, status, digitalDocumentLocation, error));
             throw new RetryableException(error, ex);

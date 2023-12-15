@@ -32,6 +32,8 @@
 		<structured-logging.version>1.9.27</structured-logging.version>
 		<!-- TODO DCAC-216 > 1.0.7 -->
 		<api-sdk-manager-java-library.version>unversioned</api-sdk-manager-java-library.version>
+		<system-lambda.version>1.2.1</system-lambda.version>
+		<spring-cloud-contract-wiremock.version>2.2.8.RELEASE</spring-cloud-contract-wiremock.version>
 	</properties>
 
 	<dependencyManagement>
@@ -61,12 +63,6 @@
 			<version>${api-sdk-manager-java-library.version}</version>
 		</dependency>
 
-		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-test</artifactId>
-			<scope>test</scope>
-		</dependency>
-
 		<!-- Structured logging -->
 		<dependency>
 			<groupId>uk.gov.companieshouse</groupId>
@@ -80,6 +76,24 @@
 					<artifactId>logback-classic</artifactId>
 				</exclusion>
 			</exclusions>
+		</dependency>
+
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-test</artifactId>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>com.github.stefanbirkner</groupId>
+			<artifactId>system-lambda</artifactId>
+			<version>${system-lambda.version}</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.cloud</groupId>
+			<artifactId>spring-cloud-contract-wiremock</artifactId>
+			<version>${spring-cloud-contract-wiremock.version}</version>
+			<scope>test</scope>
 		</dependency>
 
 	</dependencies>
