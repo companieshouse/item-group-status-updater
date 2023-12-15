@@ -56,7 +56,6 @@ public class PatchOrderedItemService {
         final var update = new ItemStatusUpdateApi(status, digitalDocumentLocation);
 
         try {
-            // TODO DCAC-216 Do we want the response payload? ...getData();
             apiClient.privateOrderResourceHandler().patchOrderedItem(uri, update).execute();
         } catch (ApiErrorResponseException ex) {
             final String error = "Error sending request to " + uri + " for patch ordered item.";
