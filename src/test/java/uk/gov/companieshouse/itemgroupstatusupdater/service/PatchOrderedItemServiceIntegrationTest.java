@@ -13,6 +13,12 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR;
 import static org.springframework.http.HttpStatus.NOT_FOUND;
 import static org.springframework.http.HttpStatus.SERVICE_UNAVAILABLE;
+import static uk.gov.companieshouse.itemgroupstatusupdater.util.TestConstants.DIGITAL_DOCUMENT_LOCATION;
+import static uk.gov.companieshouse.itemgroupstatusupdater.util.TestConstants.ITEM_ID;
+import static uk.gov.companieshouse.itemgroupstatusupdater.util.TestConstants.ORDER_NUMBER;
+import static uk.gov.companieshouse.itemgroupstatusupdater.util.TestConstants.PATCH_ORDERED_ITEM_URI;
+import static uk.gov.companieshouse.itemgroupstatusupdater.util.TestConstants.STATUS;
+import static uk.gov.companieshouse.itemgroupstatusupdater.util.TestUtils.getExpectedReason;
 
 import com.github.tomakehurst.wiremock.http.Fault;
 import org.hamcrest.core.Is;
@@ -25,15 +31,12 @@ import org.springframework.core.env.Environment;
 import org.springframework.http.HttpStatus;
 import uk.gov.companieshouse.itemgroupstatusupdater.exception.RetryableException;
 
+/**
+ * Integration tests the {@link PatchOrderedItemService}.
+ */
 @SpringBootTest
 @AutoConfigureWireMock(port = 0)
 class PatchOrderedItemServiceIntegrationTest {
-
-    private static final String ORDER_NUMBER = "ORD-844016-962315";
-    private static final String ITEM_ID = "CCD-289716-962308";
-    private static final String STATUS = "satisfied";
-    private static final String DIGITAL_DOCUMENT_LOCATION =
-        "s3://document-api-images-cidev/docs/--EdB7fbldt5oujK6Nz7jZ3hGj_x6vW8Q_2gQTyjWBM/application-pdf";
 
     @Autowired
     private PatchOrderedItemService serviceUnderTest;
@@ -46,7 +49,7 @@ class PatchOrderedItemServiceIntegrationTest {
     @DisplayName("patchOrderedItem() patches the ordered item successfully")
     void patchOrderedItemPatchesItemSuccessfully() throws Exception {
 
-        givenThat(patch(urlEqualTo("/orders/ORD-844016-962315/items/CCD-289716-962308"))
+        givenThat(patch(urlEqualTo(PATCH_ORDERED_ITEM_URI))
             .willReturn(ok()));
 
         patchOrderedItem();
@@ -56,7 +59,7 @@ class PatchOrderedItemServiceIntegrationTest {
     @DisplayName("patchOrderedItem() throws RetryableException for unknown item")
     void patchOrderedItemThrowsRetryableExceptionForUnknownItem() {
 
-        givenThat(patch(urlEqualTo("/orders/ORD-844016-962315/items/CCD-289716-962308"))
+        givenThat(patch(urlEqualTo(PATCH_ORDERED_ITEM_URI))
             .willReturn(notFound()));
 
         assertOrdersApiRequestIssuePropagatedAsRetryableException(NOT_FOUND);
@@ -66,7 +69,7 @@ class PatchOrderedItemServiceIntegrationTest {
     @DisplayName("patchOrderedItem() throws RetryableException for service unavailable")
     void patchOrderedItemThrowsRetryableExceptionForServiceUnavailable() {
 
-        givenThat(patch(urlEqualTo("/orders/ORD-844016-962315/items/CCD-289716-962308"))
+        givenThat(patch(urlEqualTo(PATCH_ORDERED_ITEM_URI))
             .willReturn(serviceUnavailable()));
 
         assertOrdersApiRequestIssuePropagatedAsRetryableException(SERVICE_UNAVAILABLE);
@@ -76,7 +79,7 @@ class PatchOrderedItemServiceIntegrationTest {
     @DisplayName("patchOrderedItem() throws RetryableException for connection reset")
     void patchOrderedItemThrowsRetryableExceptionForConnectionReset() {
 
-        givenThat(patch(urlEqualTo("/orders/ORD-844016-962315/items/CCD-289716-962308"))
+        givenThat(patch(urlEqualTo(PATCH_ORDERED_ITEM_URI))
             .willReturn(aResponse().withFault(Fault.CONNECTION_RESET_BY_PEER)));
 
         assertOrdersApiRequestIssuePropagatedAsRetryableException(INTERNAL_SERVER_ERROR,
@@ -93,16 +96,12 @@ class PatchOrderedItemServiceIntegrationTest {
         final HttpStatus underlyingStatus, final String reasonPhrase) {
         final RetryableException exception =
             assertThrows(RetryableException.class,
-                () -> patchOrderedItem());
-        final String expectedReason =
-            "Received unexpected response status code " + underlyingStatus.value()
-                + ", and status message '" + reasonPhrase + "' sending request to "
-                + "patch ordered item at /orders/ORD-844016-962315/items/CCD-289716-962308.";
-        assertThat(exception.getMessage(), Is.is(expectedReason));
+                this::patchOrderedItem);
+        assertThat(exception.getMessage(),
+            Is.is(getExpectedReason(underlyingStatus.value(), reasonPhrase)));
     }
 
     private void patchOrderedItem() throws Exception {
-        final int statusCode;
         final String wireMockPort = environment.getProperty("wiremock.server.port");
         withEnvironmentVariable("API_URL", "http://localhost:" + wireMockPort)
             .and("CHS_API_KEY", "Token value")
@@ -111,5 +110,6 @@ class PatchOrderedItemServiceIntegrationTest {
             .execute(() -> serviceUnderTest.patchOrderedItem(ORDER_NUMBER, ITEM_ID, STATUS,
                 DIGITAL_DOCUMENT_LOCATION));
     }
+
 
 }
