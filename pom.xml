@@ -27,6 +27,7 @@
 
 		<spring-boot-maven-plugin.version>2.5.5</spring-boot-maven-plugin.version>
 		<sonar-maven-plugin.version>3.4.0.905</sonar-maven-plugin.version>
+		<maven-surefire-plugin.version>2.22.2</maven-surefire-plugin.version>
 		<!-- Structured logging -->
 		<structured-logging.version>1.9.27</structured-logging.version>
 		<!-- TODO DCAC-216 > 1.0.7 -->
@@ -108,6 +109,11 @@
 				<groupId>org.sonarsource.scanner.maven</groupId>
 				<artifactId>sonar-maven-plugin</artifactId>
 				<version>${sonar-maven-plugin.version}</version>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-surefire-plugin</artifactId>
+				<version>${maven-surefire-plugin.version}</version>
 			</plugin>
 			<plugin>
 				<groupId>com.google.cloud.tools</groupId>
