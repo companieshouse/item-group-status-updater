@@ -1,5 +1,7 @@
 package uk.gov.companieshouse.itemgroupstatusupdater;
 
+import static uk.gov.companieshouse.itemgroupstatusupdater.environment.EnvironmentVariablesChecker.allRequiredEnvironmentVariablesPresent;
+
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
@@ -7,7 +9,9 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 public class ItemGroupStatusUpdaterApplication {
 
 	public static void main(String[] args) {
-		SpringApplication.run(ItemGroupStatusUpdaterApplication.class, args);
+		if (allRequiredEnvironmentVariablesPresent()) {
+			SpringApplication.run(ItemGroupStatusUpdaterApplication.class, args);
+		}
 	}
 
 }
