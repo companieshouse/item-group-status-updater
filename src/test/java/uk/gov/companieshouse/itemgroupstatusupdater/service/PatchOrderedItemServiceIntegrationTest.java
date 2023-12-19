@@ -111,5 +111,4 @@ class PatchOrderedItemServiceIntegrationTest {
                 DIGITAL_DOCUMENT_LOCATION));
     }
 
-
 }

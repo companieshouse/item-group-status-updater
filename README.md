@@ -18,11 +18,9 @@ In order to build `item-group-status-updater` locally you will need the followin
 | `DOCUMENT_API_LOCAL_URL` | The Document API URL that must be configured for this app.  | √         | N/A     | `NOT-USED`                  |
 | `PAYMENTS_API_URL`       | The Payments API URL that must be configured for this app.  | √         | N/A     | `NOT-USED`                  |
 
-
 ## Endpoints
 
 | Path                                       | Method | Description                                                         |
 |--------------------------------------------|--------|---------------------------------------------------------------------|
 | *`/item-group-status-updater/healthcheck`* | GET    | Returns HTTP OK (`200`) to indicate a healthy application instance. |
-
 
