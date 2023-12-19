@@ -30,8 +30,9 @@
 		<maven-surefire-plugin.version>2.22.2</maven-surefire-plugin.version>
 		<!-- Structured logging -->
 		<structured-logging.version>1.9.27</structured-logging.version>
-		<!-- TODO DCAC-216 > 1.0.7 -->
-		<api-sdk-manager-java-library.version>unversioned</api-sdk-manager-java-library.version>
+		<!-- TODO DCAC-216 >= 1.0.10 -->
+		<api-sdk-manager-java-library.version>1.0.8</api-sdk-manager-java-library.version>
+		<private-api-sdk-java.version>2.0.335</private-api-sdk-java.version>
 		<system-lambda.version>1.2.1</system-lambda.version>
 		<spring-cloud-contract-wiremock.version>2.2.8.RELEASE</spring-cloud-contract-wiremock.version>
 	</properties>
@@ -61,6 +62,12 @@
 			<groupId>uk.gov.companieshouse</groupId>
 			<artifactId>api-sdk-manager-java-library</artifactId>
 			<version>${api-sdk-manager-java-library.version}</version>
+		</dependency>
+		<!-- TODO DCAC-216 Use api-sdk-manager-java-library >= 1.0.10 -->
+		<dependency>
+			<groupId>uk.gov.companieshouse</groupId>
+			<artifactId>private-api-sdk-java</artifactId>
+			<version>${private-api-sdk-java.version}</version>
 		</dependency>
 
 		<!-- Structured logging -->
