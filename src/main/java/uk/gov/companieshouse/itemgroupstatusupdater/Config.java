@@ -82,9 +82,9 @@ public class Config {
     }
 
     @Bean
-    public ConcurrentKafkaListenerContainerFactory<String, String> kafkaListenerContainerFactory(ConsumerFactory<String, String> consumerFactory,
+    public ConcurrentKafkaListenerContainerFactory<String, ItemGroupProcessed> kafkaListenerContainerFactory(ConsumerFactory<String, ItemGroupProcessed> consumerFactory,
                                                                                                  @Value("${consumer.concurrency}") Integer concurrency) {
-        ConcurrentKafkaListenerContainerFactory<String, String> factory = new ConcurrentKafkaListenerContainerFactory<>();
+        ConcurrentKafkaListenerContainerFactory<String, ItemGroupProcessed> factory = new ConcurrentKafkaListenerContainerFactory<>();
         factory.setConsumerFactory(consumerFactory);
         factory.setConcurrency(concurrency);
         factory.getContainerProperties().setAckMode(ContainerProperties.AckMode.RECORD);
