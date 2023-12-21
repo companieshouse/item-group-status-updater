@@ -18,13 +18,23 @@
 	<properties>
 		<maven.compiler.source>11</maven.compiler.source>
 		<maven.compiler.target>11</maven.compiler.target>
-		<spring.boot.version>2.7.10</spring.boot.version>
+		<spring-boot-dependencies.version>2.7.10</spring-boot-dependencies.version>
+		<start-class>uk.gov.companieshouse.itemgroupstatusupdater.ItemGroupStatusUpdaterApplication</start-class>
+
+		<!-- Docker -->
+		<jib-maven-plugin.version>3.3.1</jib-maven-plugin.version>
+
+		<spring-boot-maven-plugin.version>2.5.5</spring-boot-maven-plugin.version>
+		<sonar-maven-plugin.version>3.4.0.905</sonar-maven-plugin.version>
+		<maven-surefire-plugin.version>2.22.2</maven-surefire-plugin.version>
+		<!-- Structured logging -->
+		<structured-logging.version>1.9.27</structured-logging.version>
+		<api-sdk-manager-java-library.version>1.0.12</api-sdk-manager-java-library.version>
+		<system-lambda.version>1.2.1</system-lambda.version>
+		<spring-cloud-contract-wiremock.version>2.2.8.RELEASE</spring-cloud-contract-wiremock.version>
+
 		<cucumber.version>7.11.2</cucumber.version>
 		<test-containers.version>1.18.1</test-containers.version>
-		<jib.version>3.3.1</jib.version>
-		<structured-logging.version>1.9.25</structured-logging.version>
-		<api-sdk-manager-java-library.version>1.0.6</api-sdk-manager-java-library.version>
-		<private-api-sdk-java.version>2.0.244</private-api-sdk-java.version>
 		<kafka-models.version>1.0.39</kafka-models.version>
 		<ch-kafka.version>1.4.8</ch-kafka.version>
 		<skip.unit.tests>false</skip.unit.tests>
@@ -40,14 +50,7 @@
 			<dependency>
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-dependencies</artifactId>
-				<version>${spring.boot.version}</version>
-				<type>pom</type>
-				<scope>import</scope>
-			</dependency>
-			<dependency>
-				<groupId>io.cucumber</groupId>
-				<artifactId>cucumber-bom</artifactId>
-				<version>${cucumber.version}</version>
+				<version>${spring-boot-dependencies.version}</version>
 				<type>pom</type>
 				<scope>import</scope>
 			</dependency>
@@ -60,6 +63,7 @@
 			</dependency>
 		</dependencies>
 	</dependencyManagement>
+
 	<dependencies>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
@@ -94,44 +98,26 @@
 			<artifactId>spring-boot-starter-web</artifactId>
 		</dependency>
 		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-actuator</artifactId>
+			<groupId>uk.gov.companieshouse</groupId>
+			<artifactId>api-sdk-manager-java-library</artifactId>
+			<version>${api-sdk-manager-java-library.version}</version>
 		</dependency>
-		<dependency>
-			<groupId>org.springframework.kafka</groupId>
-			<artifactId>spring-kafka</artifactId>
-		</dependency>
+
+		<!-- Structured logging -->
 		<dependency>
 			<groupId>uk.gov.companieshouse</groupId>
 			<artifactId>structured-logging</artifactId>
 			<version>${structured-logging.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>uk.gov.companieshouse</groupId>
-			<artifactId>api-sdk-manager-java-library</artifactId>
-			<version>${api-sdk-manager-java-library.version}</version>
+			<scope>compile</scope>
 			<exclusions>
 				<exclusion>
-					<groupId>javax.servlet</groupId>
-					<artifactId>servlet-api</artifactId>
+					<!-- Exclude logback to prevent multiple SLF4J binding warning -->
+					<groupId>ch.qos.logback</groupId>
+					<artifactId>logback-classic</artifactId>
 				</exclusion>
 			</exclusions>
 		</dependency>
-		<dependency>
-			<groupId>uk.gov.companieshouse</groupId>
-			<artifactId>private-api-sdk-java</artifactId>
-			<version>${private-api-sdk-java.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>uk.gov.companieshouse</groupId>
-			<artifactId>kafka-models</artifactId>
-			<version>${kafka-models.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>uk.gov.companieshouse</groupId>
-			<artifactId>ch-kafka</artifactId>
-			<version>${ch-kafka.version}</version>
-		</dependency>
+
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-test</artifactId>
@@ -212,6 +198,18 @@
 			<artifactId>junit-platform-commons</artifactId>
 			<scope>test</scope>
 		</dependency>
+		<dependency>
+			<groupId>com.github.stefanbirkner</groupId>
+			<artifactId>system-lambda</artifactId>
+			<version>${system-lambda.version}</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.cloud</groupId>
+			<artifactId>spring-cloud-contract-wiremock</artifactId>
+			<version>${spring-cloud-contract-wiremock.version}</version>
+			<scope>test</scope>
+		</dependency>
 		<!--AspectJ Dependencies-->
 		<dependency>
 			<artifactId>aspectjrt</artifactId>
@@ -222,12 +220,16 @@
 			<groupId>org.aspectj</groupId>
 		</dependency>
 	</dependencies>
+
 	<build>
 		<plugins>
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
-				<version>${spring.boot.version}</version>
+				<version>${spring-boot-maven-plugin.version}</version>
+				<configuration>
+					<mainClass>${start-class}</mainClass>
+				</configuration>
 				<executions>
 					<execution>
 						<goals>
@@ -238,7 +240,7 @@
 			</plugin>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-surefire-plugin</artifactId>
+				<artifactId>${maven-surefire-plugin.version}</artifactId>
 				<version>3.0.0</version>
 				<configuration>
 					<skipTests>${skip.unit.tests}</skipTests>
@@ -246,6 +248,11 @@
 						<exclude>**/Runner.java</exclude>
 					</excludes>
 				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.sonarsource.scanner.maven</groupId>
+				<artifactId>sonar-maven-plugin</artifactId>
+				<version>${sonar-maven-plugin.version}</version>
 			</plugin>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>

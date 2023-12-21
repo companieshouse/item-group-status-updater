@@ -10,6 +10,7 @@ import org.springframework.test.context.ActiveProfiles;
 @ActiveProfiles("test_main_positive")
 class ItemGroupStatusUpdaterApplicationTests {
 
+	@SuppressWarnings("squid:S2699") // at least one assertion
 	@Test
 	void contextLoads() {
 	}
