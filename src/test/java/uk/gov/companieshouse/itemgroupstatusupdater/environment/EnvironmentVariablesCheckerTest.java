@@ -15,8 +15,13 @@ import java.util.Map;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.context.annotation.Import;
+import org.springframework.test.context.ActiveProfiles;
+import uk.gov.companieshouse.itemgroupstatusupdater.TestConfig;
 
 @SpringBootTest
+@ActiveProfiles("test_main_positive")
+@Import(TestConfig.class)
 class EnvironmentVariablesCheckerTest {
 
     private static final String TOKEN_VALUE = "token value";
