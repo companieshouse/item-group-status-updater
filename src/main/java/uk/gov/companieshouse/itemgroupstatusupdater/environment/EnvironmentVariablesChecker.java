@@ -1,6 +1,6 @@
 package uk.gov.companieshouse.itemgroupstatusupdater.environment;
 
-import static uk.gov.companieshouse.itemgroupstatusupdater.config.ApplicationConfiguration.APPLICATION_NAMESPACE;
+import static uk.gov.companieshouse.itemgroupstatusupdater.ItemGroupStatusUpdaterApplication.NAMESPACE;
 
 import uk.gov.companieshouse.environment.EnvironmentReader;
 import uk.gov.companieshouse.environment.exception.EnvironmentVariableException;
@@ -10,7 +10,7 @@ import uk.gov.companieshouse.logging.LoggerFactory;
 
 public class EnvironmentVariablesChecker {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(APPLICATION_NAMESPACE);
+    private static final Logger LOGGER = LoggerFactory.getLogger(NAMESPACE);
 
     public enum RequiredEnvironmentVariables {
         API_URL("API_URL"),

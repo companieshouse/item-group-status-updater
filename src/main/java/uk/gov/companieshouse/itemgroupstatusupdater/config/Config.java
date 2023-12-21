@@ -1,8 +1,10 @@
-package uk.gov.companieshouse.itemgroupstatusupdater;
+package uk.gov.companieshouse.itemgroupstatusupdater.config;
 
 import static uk.gov.companieshouse.itemgroupstatusupdater.ItemGroupStatusUpdaterApplication.NAMESPACE;
 
 import consumer.deserialization.AvroDeserializer;
+import uk.gov.companieshouse.itemgroupstatusupdater.InvalidMessageRouter;
+import uk.gov.companieshouse.itemgroupstatusupdater.MessageFlags;
 import uk.gov.companieshouse.logging.util.DataMap;
 import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.clients.producer.ProducerConfig;
