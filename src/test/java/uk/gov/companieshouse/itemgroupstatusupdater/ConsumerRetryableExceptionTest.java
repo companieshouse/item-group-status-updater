@@ -28,6 +28,7 @@ import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 
 import uk.gov.companieshouse.itemgroupprocessed.ItemGroupProcessed;
+import uk.gov.companieshouse.itemgroupstatusupdater.exception.RetryableException;
 
 @SpringBootTest
 @ActiveProfiles("test_main_retryable")

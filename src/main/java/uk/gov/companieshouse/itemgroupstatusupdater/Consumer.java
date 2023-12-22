@@ -8,6 +8,7 @@ import org.springframework.messaging.Message;
 import org.springframework.retry.annotation.Backoff;
 import org.springframework.stereotype.Component;
 import uk.gov.companieshouse.itemgroupprocessed.ItemGroupProcessed;
+import uk.gov.companieshouse.itemgroupstatusupdater.exception.RetryableException;
 
 /**
  * Consumes messages from the configured main Kafka topic.
