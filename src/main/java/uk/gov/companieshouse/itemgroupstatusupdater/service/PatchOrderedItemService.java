@@ -59,7 +59,7 @@ public class PatchOrderedItemService {
             final String error = "Received unexpected response status code " + ex.getStatusCode()
                 + ", and status message '" + ex.getStatusMessage()
                 + "' sending request to patch ordered item at " + uri + ".";
-            logger.error(error, ex,
+            logger.error(error,
                 getLogMap(orderNumber, itemId, status, digitalDocumentLocation, error));
             throw new RetryableException(error, ex);
         } catch (URIValidationException ex) {
