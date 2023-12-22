@@ -1,8 +1,7 @@
 package uk.gov.companieshouse.itemgroupstatusupdater.service;
 
-import static java.util.Collections.singletonList;
+import static uk.gov.companieshouse.itemgroupstatusupdater.logging.LoggingUtils.getLogMap;
 
-import java.util.Map;
 import org.springframework.stereotype.Service;
 import org.springframework.web.util.UriTemplate;
 import uk.gov.companieshouse.api.error.ApiErrorResponseException;
@@ -11,7 +10,6 @@ import uk.gov.companieshouse.api.model.order.item.ItemStatusUpdateApi;
 import uk.gov.companieshouse.itemgroupstatusupdater.exception.NonRetryableException;
 import uk.gov.companieshouse.itemgroupstatusupdater.exception.RetryableException;
 import uk.gov.companieshouse.logging.Logger;
-import uk.gov.companieshouse.logging.util.DataMap;
 
 /**
  * Service that propagates the updated status of an item in an order by sending a PATCH request to
@@ -71,36 +69,6 @@ public class PatchOrderedItemService {
                 getLogMap(orderNumber, itemId, status, digitalDocumentLocation, error));
             throw new NonRetryableException(error, ex);
         }
-    }
-
-    private Map<String, Object> getLogMap(
-        final String orderNumber,
-        final String itemId,
-        final String status,
-        final String digitalDocumentLocation) {
-        return new DataMap.Builder()
-            .orderId(orderNumber)
-            .itemId(itemId)
-            .status(status)
-            .digitalDocumentLocation(digitalDocumentLocation)
-            .build()
-            .getLogMap();
-    }
-
-    private Map<String, Object> getLogMap(
-        final String orderNumber,
-        final String itemId,
-        final String status,
-        final String digitalDocumentLocation,
-        final String error) {
-        return new DataMap.Builder()
-            .orderId(orderNumber)
-            .itemId(itemId)
-            .status(status)
-            .digitalDocumentLocation(digitalDocumentLocation)
-            .errors(singletonList(error))
-            .build()
-            .getLogMap();
     }
 
 }

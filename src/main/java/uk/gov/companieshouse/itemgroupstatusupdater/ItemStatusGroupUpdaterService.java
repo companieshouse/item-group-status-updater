@@ -1,9 +1,10 @@
 package uk.gov.companieshouse.itemgroupstatusupdater;
 
-import java.util.Map;
+import static uk.gov.companieshouse.itemgroupstatusupdater.logging.LoggingUtils.getLogMap;
+
 import org.springframework.stereotype.Component;
+import uk.gov.companieshouse.itemgroupstatusupdater.service.PatchOrderedItemService;
 import uk.gov.companieshouse.logging.Logger;
-import uk.gov.companieshouse.logging.util.DataMap;
 
 /**
  * Service that converts the <code>item-group-processed</code> Kafka message it receives into a
@@ -13,9 +14,11 @@ import uk.gov.companieshouse.logging.util.DataMap;
 class ItemStatusGroupUpdaterService implements Service {
 
     private final Logger logger;
+    private final PatchOrderedItemService patchOrderedItemService;
 
-    ItemStatusGroupUpdaterService(Logger logger) {
+    ItemStatusGroupUpdaterService(Logger logger, PatchOrderedItemService patchOrderedItemService) {
         this.logger = logger;
+        this.patchOrderedItemService = patchOrderedItemService;
     }
 
     @Override
@@ -24,18 +27,13 @@ class ItemStatusGroupUpdaterService implements Service {
         final var message = parameters.getData();
         final var orderNumber = message.getOrderNumber();
         final var itemId = message.getItem().getId();
+        final var status = message.getItem().getStatus();
+        final var digitalDocumentLocation = message.getItem().getDigitalDocumentLocation();
 
         logger.info("Processing message " + message + " for order ID " + orderNumber +
-            ", item ID " + itemId + ".", getLogMap(orderNumber, itemId));
+            ", item ID " + itemId + ".", getLogMap(orderNumber, itemId, status, digitalDocumentLocation));
 
-    }
-
-    private Map<String, Object> getLogMap(final String orderId, final String itemId) {
-        return new DataMap.Builder()
-            .orderId(orderId)
-            .itemId(itemId)
-            .build()
-            .getLogMap();
+        patchOrderedItemService.patchOrderedItem(orderNumber, itemId, status, digitalDocumentLocation);
     }
 
 }
