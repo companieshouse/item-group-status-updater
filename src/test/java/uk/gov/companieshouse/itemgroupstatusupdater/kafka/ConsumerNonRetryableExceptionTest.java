@@ -5,11 +5,12 @@ import static org.junit.jupiter.api.Assertions.fail;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.verify;
-import static uk.gov.companieshouse.itemgroupstatusupdater.Constants.ITEM_GROUP_PROCESSED;
-import static uk.gov.companieshouse.itemgroupstatusupdater.TestUtils.ERROR_TOPIC;
-import static uk.gov.companieshouse.itemgroupstatusupdater.TestUtils.INVALID_TOPIC;
-import static uk.gov.companieshouse.itemgroupstatusupdater.TestUtils.MAIN_TOPIC;
-import static uk.gov.companieshouse.itemgroupstatusupdater.TestUtils.RETRY_TOPIC;
+import static uk.gov.companieshouse.itemgroupstatusupdater.util.TestConstants.ITEM_GROUP_PROCESSED;
+import static uk.gov.companieshouse.itemgroupstatusupdater.util.TestUtils.ERROR_TOPIC;
+import static uk.gov.companieshouse.itemgroupstatusupdater.util.TestUtils.INVALID_TOPIC;
+import static uk.gov.companieshouse.itemgroupstatusupdater.util.TestUtils.MAIN_TOPIC;
+import static uk.gov.companieshouse.itemgroupstatusupdater.util.TestUtils.RETRY_TOPIC;
+import static uk.gov.companieshouse.itemgroupstatusupdater.util.TestUtils.noOfRecordsForTopic;
 
 import java.time.Duration;
 import java.util.concurrent.CountDownLatch;
@@ -26,7 +27,6 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.kafka.test.utils.KafkaTestUtils;
 import org.springframework.test.context.ActiveProfiles;
 import uk.gov.companieshouse.itemgroupprocessed.ItemGroupProcessed;
-import uk.gov.companieshouse.itemgroupstatusupdater.TestUtils;
 import uk.gov.companieshouse.itemgroupstatusupdater.exception.NonRetryableException;
 import uk.gov.companieshouse.itemgroupstatusupdater.service.Service;
 import uk.gov.companieshouse.itemgroupstatusupdater.service.ServiceParameters;
@@ -66,10 +66,10 @@ class ConsumerNonRetryableExceptionTest extends AbstractKafkaIntegrationTest {
         ConsumerRecords<?, ?> consumerRecords = KafkaTestUtils.getRecords(testConsumer, 10000L, 2);
 
         //then
-        assertThat(TestUtils.noOfRecordsForTopic(consumerRecords, MAIN_TOPIC)).isEqualTo(1);
-        assertThat(TestUtils.noOfRecordsForTopic(consumerRecords, RETRY_TOPIC)).isZero();
-        assertThat(TestUtils.noOfRecordsForTopic(consumerRecords, ERROR_TOPIC)).isZero();
-        assertThat(TestUtils.noOfRecordsForTopic(consumerRecords, INVALID_TOPIC)).isEqualTo(1);
+        assertThat(noOfRecordsForTopic(consumerRecords, MAIN_TOPIC)).isEqualTo(1);
+        assertThat(noOfRecordsForTopic(consumerRecords, RETRY_TOPIC)).isZero();
+        assertThat(noOfRecordsForTopic(consumerRecords, ERROR_TOPIC)).isZero();
+        assertThat(noOfRecordsForTopic(consumerRecords, INVALID_TOPIC)).isEqualTo(1);
         verify(service).processMessage(new ServiceParameters(ITEM_GROUP_PROCESSED));
     }
 }

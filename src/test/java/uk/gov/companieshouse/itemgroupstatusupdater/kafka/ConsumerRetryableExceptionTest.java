@@ -11,12 +11,13 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.fail;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
-import static uk.gov.companieshouse.itemgroupstatusupdater.TestUtils.ERROR_TOPIC;
-import static uk.gov.companieshouse.itemgroupstatusupdater.TestUtils.INVALID_TOPIC;
-import static uk.gov.companieshouse.itemgroupstatusupdater.TestUtils.MAIN_TOPIC;
-import static uk.gov.companieshouse.itemgroupstatusupdater.TestUtils.RETRY_TOPIC;
 import static uk.gov.companieshouse.itemgroupstatusupdater.util.TestConstants.ITEM_GROUP_PROCESSED;
 import static uk.gov.companieshouse.itemgroupstatusupdater.util.TestConstants.PATCH_ORDERED_ITEM_URI;
+import static uk.gov.companieshouse.itemgroupstatusupdater.util.TestUtils.ERROR_TOPIC;
+import static uk.gov.companieshouse.itemgroupstatusupdater.util.TestUtils.INVALID_TOPIC;
+import static uk.gov.companieshouse.itemgroupstatusupdater.util.TestUtils.MAIN_TOPIC;
+import static uk.gov.companieshouse.itemgroupstatusupdater.util.TestUtils.RETRY_TOPIC;
+import static uk.gov.companieshouse.itemgroupstatusupdater.util.TestUtils.noOfRecordsForTopic;
 
 import com.github.tomakehurst.wiremock.client.WireMock;
 import java.time.Duration;
@@ -40,7 +41,6 @@ import org.springframework.core.env.Environment;
 import org.springframework.kafka.test.utils.KafkaTestUtils;
 import org.springframework.test.context.ActiveProfiles;
 import uk.gov.companieshouse.itemgroupprocessed.ItemGroupProcessed;
-import uk.gov.companieshouse.itemgroupstatusupdater.TestUtils;
 import uk.gov.companieshouse.itemgroupstatusupdater.service.ItemStatusGroupUpdaterService;
 import uk.gov.companieshouse.itemgroupstatusupdater.service.PatchOrderedItemService;
 import uk.gov.companieshouse.itemgroupstatusupdater.service.Service;
@@ -94,10 +94,10 @@ class ConsumerRetryableExceptionTest extends AbstractKafkaIntegrationTest {
         final ConsumerRecords<?, ?> consumerRecords = setUpSendAndWaitForMessage();
 
         //then
-        assertThat(TestUtils.noOfRecordsForTopic(consumerRecords, MAIN_TOPIC)).isEqualTo(1);
-        assertThat(TestUtils.noOfRecordsForTopic(consumerRecords, RETRY_TOPIC)).isEqualTo(3);
-        assertThat(TestUtils.noOfRecordsForTopic(consumerRecords, ERROR_TOPIC)).isEqualTo(1);
-        assertThat(TestUtils.noOfRecordsForTopic(consumerRecords, INVALID_TOPIC)).isZero();
+        assertThat(noOfRecordsForTopic(consumerRecords, MAIN_TOPIC)).isEqualTo(1);
+        assertThat(noOfRecordsForTopic(consumerRecords, RETRY_TOPIC)).isEqualTo(3);
+        assertThat(noOfRecordsForTopic(consumerRecords, ERROR_TOPIC)).isEqualTo(1);
+        assertThat(noOfRecordsForTopic(consumerRecords, INVALID_TOPIC)).isZero();
         verify(service, times(4)).processMessage(new ServiceParameters(ITEM_GROUP_PROCESSED));
         WireMock.verify(exactly(4), patchRequestedFor(urlEqualTo(PATCH_ORDERED_ITEM_URI)));
     }

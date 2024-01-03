@@ -1,10 +1,10 @@
 package uk.gov.companieshouse.itemgroupstatusupdater;
 
 
-import static uk.gov.companieshouse.itemgroupstatusupdater.TestUtils.ERROR_TOPIC;
-import static uk.gov.companieshouse.itemgroupstatusupdater.TestUtils.INVALID_TOPIC;
-import static uk.gov.companieshouse.itemgroupstatusupdater.TestUtils.MAIN_TOPIC;
-import static uk.gov.companieshouse.itemgroupstatusupdater.TestUtils.RETRY_TOPIC;
+import static uk.gov.companieshouse.itemgroupstatusupdater.util.TestUtils.ERROR_TOPIC;
+import static uk.gov.companieshouse.itemgroupstatusupdater.util.TestUtils.INVALID_TOPIC;
+import static uk.gov.companieshouse.itemgroupstatusupdater.util.TestUtils.MAIN_TOPIC;
+import static uk.gov.companieshouse.itemgroupstatusupdater.util.TestUtils.RETRY_TOPIC;
 
 import consumer.deserialization.AvroDeserializer;
 import java.util.List;

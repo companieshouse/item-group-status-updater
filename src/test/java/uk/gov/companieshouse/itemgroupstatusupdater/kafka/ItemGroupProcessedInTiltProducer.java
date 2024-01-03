@@ -1,6 +1,6 @@
 package uk.gov.companieshouse.itemgroupstatusupdater.kafka;
 
-import static uk.gov.companieshouse.itemgroupstatusupdater.Constants.ITEM_GROUP_PROCESSED;
+import static uk.gov.companieshouse.itemgroupstatusupdater.util.TestConstants.ITEM_GROUP_PROCESSED;
 
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
