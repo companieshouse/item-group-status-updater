@@ -1,4 +1,4 @@
-package uk.gov.companieshouse.itemgroupstatusupdater;
+package uk.gov.companieshouse.itemgroupstatusupdater.service;
 
 import org.springframework.stereotype.Component;
 import uk.gov.companieshouse.itemgroupstatusupdater.exception.NonRetryableException;

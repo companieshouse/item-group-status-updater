@@ -1,4 +1,4 @@
-package uk.gov.companieshouse.itemgroupstatusupdater;
+package uk.gov.companieshouse.itemgroupstatusupdater.kafka;
 
 import static com.github.stefanbirkner.systemlambda.SystemLambda.withEnvironmentVariable;
 import static com.github.tomakehurst.wiremock.client.WireMock.givenThat;
@@ -38,7 +38,11 @@ import org.springframework.core.env.Environment;
 import org.springframework.kafka.test.utils.KafkaTestUtils;
 import org.springframework.test.context.ActiveProfiles;
 import uk.gov.companieshouse.itemgroupprocessed.ItemGroupProcessed;
+import uk.gov.companieshouse.itemgroupstatusupdater.TestUtils;
+import uk.gov.companieshouse.itemgroupstatusupdater.service.ItemStatusGroupUpdaterService;
 import uk.gov.companieshouse.itemgroupstatusupdater.service.PatchOrderedItemService;
+import uk.gov.companieshouse.itemgroupstatusupdater.service.Service;
+import uk.gov.companieshouse.itemgroupstatusupdater.service.ServiceParameters;
 import uk.gov.companieshouse.logging.Logger;
 
 @SpringBootTest

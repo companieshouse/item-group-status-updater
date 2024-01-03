@@ -1,4 +1,4 @@
-package uk.gov.companieshouse.itemgroupstatusupdater;
+package uk.gov.companieshouse.itemgroupstatusupdater.kafka;
 
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.kafka.annotation.RetryableTopic;
@@ -9,6 +9,8 @@ import org.springframework.retry.annotation.Backoff;
 import org.springframework.stereotype.Component;
 import uk.gov.companieshouse.itemgroupprocessed.ItemGroupProcessed;
 import uk.gov.companieshouse.itemgroupstatusupdater.exception.RetryableException;
+import uk.gov.companieshouse.itemgroupstatusupdater.service.Service;
+import uk.gov.companieshouse.itemgroupstatusupdater.service.ServiceParameters;
 
 /**
  * Consumes messages from the configured main Kafka topic.

@@ -1,9 +1,8 @@
-package uk.gov.companieshouse.itemgroupstatusupdater;
+package uk.gov.companieshouse.itemgroupstatusupdater.service;
 
 import static uk.gov.companieshouse.itemgroupstatusupdater.logging.LoggingUtils.getLogMap;
 
 import org.springframework.stereotype.Component;
-import uk.gov.companieshouse.itemgroupstatusupdater.service.PatchOrderedItemService;
 import uk.gov.companieshouse.logging.Logger;
 
 /**
@@ -11,12 +10,12 @@ import uk.gov.companieshouse.logging.Logger;
  * REST request it dispatches to the Orders API (<code>orders-api-ch-gov-uk</code>).
  */
 @Component
-class ItemStatusGroupUpdaterService implements Service {
+public class ItemStatusGroupUpdaterService implements Service {
 
     private final Logger logger;
     private final PatchOrderedItemService patchOrderedItemService;
 
-    ItemStatusGroupUpdaterService(Logger logger, PatchOrderedItemService patchOrderedItemService) {
+    public ItemStatusGroupUpdaterService(Logger logger, PatchOrderedItemService patchOrderedItemService) {
         this.logger = logger;
         this.patchOrderedItemService = patchOrderedItemService;
     }

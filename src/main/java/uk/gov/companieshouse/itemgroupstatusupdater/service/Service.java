@@ -1,4 +1,4 @@
-package uk.gov.companieshouse.itemgroupstatusupdater;
+package uk.gov.companieshouse.itemgroupstatusupdater.service;
 
 /**
  * Processes an incoming message.

@@ -1,4 +1,4 @@
-package uk.gov.companieshouse.itemgroupstatusupdater;
+package uk.gov.companieshouse.itemgroupstatusupdater.kafka;
 
 import java.util.concurrent.CountDownLatch;
 import org.aspectj.lang.JoinPoint;
@@ -16,7 +16,7 @@ public class ConsumerAspect {
         this.latch = latch;
     }
 
-    @After("execution(* Consumer.consume(..))")
+    @After("execution(* uk.gov.companieshouse.itemgroupstatusupdater.kafka.Consumer.consume(..))")
     void afterConsume(JoinPoint joinPoint) {
         latch.countDown();
     }

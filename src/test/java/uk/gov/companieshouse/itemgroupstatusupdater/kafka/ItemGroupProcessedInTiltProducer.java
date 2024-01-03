@@ -1,4 +1,4 @@
-package uk.gov.companieshouse.itemgroupstatusupdater;
+package uk.gov.companieshouse.itemgroupstatusupdater.kafka;
 
 import static uk.gov.companieshouse.itemgroupstatusupdater.Constants.ITEM_GROUP_PROCESSED;
 
@@ -15,6 +15,8 @@ import org.springframework.context.annotation.Import;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.TestPropertySource;
 import uk.gov.companieshouse.itemgroupprocessed.ItemGroupProcessed;
+import uk.gov.companieshouse.itemgroupstatusupdater.TestConfig;
+import uk.gov.companieshouse.itemgroupstatusupdater.ItemGroupStatusUpdaterApplication;
 import uk.gov.companieshouse.logging.Logger;
 import uk.gov.companieshouse.logging.LoggerFactory;
 

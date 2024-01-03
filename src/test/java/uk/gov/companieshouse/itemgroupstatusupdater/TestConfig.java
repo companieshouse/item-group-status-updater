@@ -1,16 +1,16 @@
 package uk.gov.companieshouse.itemgroupstatusupdater;
 
 
+import static uk.gov.companieshouse.itemgroupstatusupdater.TestUtils.ERROR_TOPIC;
+import static uk.gov.companieshouse.itemgroupstatusupdater.TestUtils.INVALID_TOPIC;
+import static uk.gov.companieshouse.itemgroupstatusupdater.TestUtils.MAIN_TOPIC;
+import static uk.gov.companieshouse.itemgroupstatusupdater.TestUtils.RETRY_TOPIC;
 
-import static uk.gov.companieshouse.itemgroupstatusupdater.TestUtils.*;
-
-
+import consumer.deserialization.AvroDeserializer;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.CountDownLatch;
-
-import consumer.deserialization.AvroDeserializer;
 import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.clients.consumer.KafkaConsumer;
 import org.apache.kafka.clients.producer.KafkaProducer;
@@ -21,8 +21,9 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Primary;
-import uk.gov.companieshouse.itemgroupordered.ItemGroupOrdered;
 import uk.gov.companieshouse.itemgroupprocessed.ItemGroupProcessed;
+import uk.gov.companieshouse.itemgroupstatusupdater.service.NonRetryableExceptionService;
+import uk.gov.companieshouse.itemgroupstatusupdater.service.Service;
 import uk.gov.companieshouse.kafka.exceptions.SerializationException;
 import uk.gov.companieshouse.kafka.serialization.SerializerFactory;
 

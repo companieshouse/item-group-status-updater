@@ -1,4 +1,4 @@
-package uk.gov.companieshouse.itemgroupstatusupdater;
+package uk.gov.companieshouse.itemgroupstatusupdater.kafka;
 
 import javax.annotation.PreDestroy;
 import org.springframework.stereotype.Component;

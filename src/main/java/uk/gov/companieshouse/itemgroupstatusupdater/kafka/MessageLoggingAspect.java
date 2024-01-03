@@ -1,4 +1,4 @@
-package uk.gov.companieshouse.itemgroupstatusupdater;
+package uk.gov.companieshouse.itemgroupstatusupdater.kafka;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -12,8 +12,6 @@ import org.springframework.kafka.support.KafkaHeaders;
 import org.springframework.messaging.Message;
 import org.springframework.stereotype.Component;
 import uk.gov.companieshouse.logging.Logger;
-import uk.gov.companieshouse.logging.LoggerFactory;
-import uk.gov.companieshouse.logging.util.DataMap;
 
 /**
  * Logs message details before and after it has been processed by
@@ -41,17 +39,17 @@ public class MessageLoggingAspect {
         this.logger = logger;
     }
 
-    @Before("execution(* Consumer.consume(..))")
+    @Before("execution(* uk.gov.companieshouse.itemgroupstatusupdater.kafka.Consumer.consume(..))")
     void logBeforeMainConsumer(JoinPoint joinPoint) {
         logMessage(LOG_MESSAGE_RECEIVED, (Message<?>)joinPoint.getArgs()[0]);
     }
 
-    @After("execution(* Consumer.consume(..))")
+    @After("execution(* uk.gov.companieshouse.itemgroupstatusupdater.kafka.Consumer.consume(..))")
     void logAfterMainConsumer(JoinPoint joinPoint) {
         logMessage(LOG_MESSAGE_PROCESSED, (Message<?>)joinPoint.getArgs()[0]);
     }
 
-    @AfterThrowing(pointcut = "execution(* Consumer.consume(..))", throwing = "error")
+    @AfterThrowing(pointcut = "execution(* uk.gov.companieshouse.itemgroupstatusupdater.kafka.Consumer.consume(..))", throwing = "error")
     public void afterThrowingAdvice(JoinPoint joinPoint, Throwable error) {
         logMessage(String.format(EXCEPTION_MESSAGE, error.getClass().getSimpleName(), error.getMessage()), (Message<?>) joinPoint.getArgs()[0]);
     }

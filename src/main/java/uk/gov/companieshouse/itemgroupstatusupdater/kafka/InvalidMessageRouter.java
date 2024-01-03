@@ -1,4 +1,4 @@
-package uk.gov.companieshouse.itemgroupstatusupdater;
+package uk.gov.companieshouse.itemgroupstatusupdater.kafka;
 
 import java.util.Map;
 import org.apache.kafka.clients.producer.ProducerInterceptor;
