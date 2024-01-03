@@ -14,9 +14,17 @@ public class EnvironmentVariablesChecker {
 
     public enum RequiredEnvironmentVariables {
         API_URL("API_URL"),
+        BACKOFF_DELAY("BACKOFF_DELAY"),
+        BOOTSTRAP_SERVER_URL("BOOTSTRAP_SERVER_URL"),
         CHS_API_KEY("CHS_API_KEY"),
+        CONCURRENT_LISTENER_INSTANCES("CONCURRENT_LISTENER_INSTANCES"),
         DOCUMENT_API_LOCAL_URL("DOCUMENT_API_LOCAL_URL"),
-        PAYMENTS_API_URL("PAYMENTS_API_URL");
+        GROUP_ID("GROUP_ID"),
+        INVALID_MESSAGE_TOPIC("INVALID_MESSAGE_TOPIC"),
+        MAX_ATTEMPTS("MAX_ATTEMPTS"),
+        PAYMENTS_API_URL("PAYMENTS_API_URL"),
+        SERVER_PORT("SERVER_PORT"),
+        TOPIC("TOPIC");
 
         private final String name;
 
