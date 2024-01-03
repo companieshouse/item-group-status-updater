@@ -7,7 +7,7 @@ import org.testcontainers.containers.KafkaContainer;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
 import org.testcontainers.utility.DockerImageName;
-import uk.gov.companieshouse.itemgroupstatusupdater.TestConfig;
+import uk.gov.companieshouse.itemgroupstatusupdater.config.TestConfig;
 
 @Testcontainers
 @Import(TestConfig.class)

@@ -15,7 +15,7 @@ import org.springframework.context.annotation.Import;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.TestPropertySource;
 import uk.gov.companieshouse.itemgroupprocessed.ItemGroupProcessed;
-import uk.gov.companieshouse.itemgroupstatusupdater.TestConfig;
+import uk.gov.companieshouse.itemgroupstatusupdater.config.TestConfig;
 import uk.gov.companieshouse.itemgroupstatusupdater.ItemGroupStatusUpdaterApplication;
 import uk.gov.companieshouse.logging.Logger;
 import uk.gov.companieshouse.logging.LoggerFactory;

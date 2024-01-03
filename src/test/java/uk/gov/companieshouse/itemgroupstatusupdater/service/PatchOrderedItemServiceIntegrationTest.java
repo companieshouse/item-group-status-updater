@@ -31,7 +31,7 @@ import org.springframework.context.annotation.Import;
 import org.springframework.core.env.Environment;
 import org.springframework.http.HttpStatus;
 import org.springframework.test.context.ActiveProfiles;
-import uk.gov.companieshouse.itemgroupstatusupdater.TestConfig;
+import uk.gov.companieshouse.itemgroupstatusupdater.config.TestConfig;
 import uk.gov.companieshouse.itemgroupstatusupdater.exception.RetryableException;
 
 /**
