@@ -29,7 +29,7 @@ import uk.gov.companieshouse.logging.LoggerFactory;
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_CLASS)
 @TestPropertySource(locations="classpath:item-group-processed-in-tilt.properties")
 @Import(TestConfig.class)
-
+@SuppressWarnings("squid:S3577") // This is NOT to be run as part of an automated test suite.
 class ItemGroupProcessedInTiltProducer {
 
     private static final Logger LOGGER = LoggerFactory.getLogger("ItemGroupProcessedInTiltProducer");
