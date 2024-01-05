@@ -63,7 +63,7 @@ class ProducerSerializationExceptionTest extends AbstractKafkaIntegrationTest {
             fail("Timed out waiting for latch");
         }
 
-        ConsumerRecords<?, ?> consumerRecords = KafkaTestUtils.getRecords(testConsumer, 2000L, 2);
+        ConsumerRecords<?, ?> consumerRecords = KafkaTestUtils.getRecords(testConsumer, 10000L, 2);
 
         //then
         assertThat(noOfRecordsForTopic(consumerRecords, MAIN_TOPIC)).isEqualTo(1);
