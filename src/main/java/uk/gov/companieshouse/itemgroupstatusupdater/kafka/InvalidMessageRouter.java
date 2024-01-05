@@ -26,10 +26,12 @@ public class InvalidMessageRouter implements ProducerInterceptor<String, ItemGro
 
     @Override
     public void onAcknowledgement(RecordMetadata metadata, Exception exception) {
+        // Not interested in whether the record sent to the server is acknowledged or not.
     }
 
     @Override
     public void close() {
+        // No resources held.
     }
 
     @Override

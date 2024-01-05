@@ -56,7 +56,7 @@ class ProducerSerializationExceptionTest extends AbstractKafkaIntegrationTest {
         throws InterruptedException, SerializationException {
 
         //when
-        when(serializer.toBinary(ITEM_GROUP_PROCESSED)).thenThrow(new SerializationException("Invalid data"));
+        when(serializer.toBinary(ITEM_GROUP_PROCESSED)).thenThrow(new SerializationException("Test exception."));
         testProducer.send(new ProducerRecord<>(MAIN_TOPIC, 0, System.currentTimeMillis(), "key",
                 ITEM_GROUP_PROCESSED));
         if (!latch.await(5L, TimeUnit.SECONDS)) {
