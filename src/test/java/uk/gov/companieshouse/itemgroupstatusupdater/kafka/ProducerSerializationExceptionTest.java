@@ -2,7 +2,7 @@ package uk.gov.companieshouse.itemgroupstatusupdater.kafka;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.fail;
-import static org.mockito.Mockito.atLeast;
+import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static uk.gov.companieshouse.itemgroupstatusupdater.util.TestConstants.ITEM_GROUP_PROCESSED;
@@ -55,8 +55,16 @@ class ProducerSerializationExceptionTest extends AbstractKafkaIntegrationTest {
     void testPublishToInvalidMessageTopicSerializationException()
         throws InterruptedException, SerializationException {
 
-        //when
-        when(serializer.toBinary(ITEM_GROUP_PROCESSED)).thenThrow(new SerializationException("Test exception."));
+        // given
+        // Here we only throw the exception twice to allow the test to complete in much less time.
+        // In reality, if such an exception occurred once trying to serialize the message to be
+        // produced, it would presumably occur on every serialization/production attempt.
+        when(serializer.toBinary(ITEM_GROUP_PROCESSED))
+            .thenThrow(new SerializationException("Test exception 1."))
+            .thenThrow(new SerializationException("Test exception 2."))
+            .thenReturn(null);
+
+        // when
         testProducer.send(new ProducerRecord<>(MAIN_TOPIC, 0, System.currentTimeMillis(), "key",
                 ITEM_GROUP_PROCESSED));
         if (!latch.await(5L, TimeUnit.SECONDS)) {
@@ -65,12 +73,12 @@ class ProducerSerializationExceptionTest extends AbstractKafkaIntegrationTest {
 
         ConsumerRecords<?, ?> consumerRecords = KafkaTestUtils.getRecords(testConsumer, 10000L, 2);
 
-        //then
+        // then
         assertThat(noOfRecordsForTopic(consumerRecords, MAIN_TOPIC)).isEqualTo(1);
         assertThat(noOfRecordsForTopic(consumerRecords, RETRY_TOPIC)).isZero();
         assertThat(noOfRecordsForTopic(consumerRecords, ERROR_TOPIC)).isZero();
-        assertThat(noOfRecordsForTopic(consumerRecords, INVALID_TOPIC)).isZero();
-        verify(serializer, atLeast(3)).toBinary(ITEM_GROUP_PROCESSED);
+        assertThat(noOfRecordsForTopic(consumerRecords, INVALID_TOPIC)).isEqualTo(1);
+        verify(serializer, times(3)).toBinary(ITEM_GROUP_PROCESSED);
     }
 
 }
