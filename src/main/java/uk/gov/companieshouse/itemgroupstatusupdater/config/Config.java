@@ -3,8 +3,10 @@ package uk.gov.companieshouse.itemgroupstatusupdater.config;
 import static uk.gov.companieshouse.itemgroupstatusupdater.ItemGroupStatusUpdaterApplication.NAMESPACE;
 
 import consumer.deserialization.AvroDeserializer;
+import org.springframework.context.annotation.Scope;
 import uk.gov.companieshouse.itemgroupstatusupdater.kafka.InvalidMessageRouter;
 import uk.gov.companieshouse.itemgroupstatusupdater.kafka.MessageFlags;
+import uk.gov.companieshouse.kafka.serialization.AvroSerializer;
 import uk.gov.companieshouse.logging.util.DataMap;
 import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.clients.producer.ProducerConfig;
@@ -50,7 +52,8 @@ public class Config {
     @Bean
     public ProducerFactory<String, ItemGroupProcessed> producerFactory(@Value("${spring.kafka.bootstrap-servers}") String bootstrapServers,
                                                            MessageFlags messageFlags,
-                                                           @Value("${invalid_message_topic}") String invalidMessageTopic) {
+                                                           @Value("${invalid_message_topic}") String invalidMessageTopic,
+                                                           AvroSerializer<ItemGroupProcessed> serializer) {
         return new DefaultKafkaProducerFactory<>(
                 Map.of(
                         ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, bootstrapServers,
@@ -63,8 +66,7 @@ public class Config {
                 new StringSerializer(),
                 (topic, data) -> {
                     try {
-                        return new SerializerFactory().getSpecificRecordSerializer(ItemGroupProcessed.class)
-                                .toBinary(data); //creates a leading space
+                        return serializer.toBinary(data); //creates a leading space
                     } catch (SerializationException e) {
                         var dataMap = new DataMap.Builder()
                                 .topic(topic)
@@ -76,6 +78,12 @@ public class Config {
                     }
                 }
         );
+    }
+
+    @Bean
+    @Scope("prototype")
+    public AvroSerializer<ItemGroupProcessed> serializer() {
+        return new SerializerFactory().getSpecificRecordSerializer(ItemGroupProcessed.class);
     }
 
     @Bean
