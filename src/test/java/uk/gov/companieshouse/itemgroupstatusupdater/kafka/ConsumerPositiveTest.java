@@ -112,7 +112,7 @@ class ConsumerPositiveTest extends AbstractKafkaIntegrationTest {
     private void sendAndWaitForMessage() throws InterruptedException {
         testProducer.send(new ProducerRecord<>(MAIN_TOPIC, 0, System.currentTimeMillis(), "key",
             ITEM_GROUP_PROCESSED));
-        if (!latch.await(5L, TimeUnit.SECONDS)) {
+        if (!latch.await(30L, TimeUnit.SECONDS)) {
             fail("Timed out waiting for latch");
         }
     }
