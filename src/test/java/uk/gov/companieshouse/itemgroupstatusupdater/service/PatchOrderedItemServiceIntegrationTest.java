@@ -27,8 +27,11 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.cloud.contract.wiremock.AutoConfigureWireMock;
+import org.springframework.context.annotation.Import;
 import org.springframework.core.env.Environment;
 import org.springframework.http.HttpStatus;
+import org.springframework.test.context.ActiveProfiles;
+import uk.gov.companieshouse.itemgroupstatusupdater.config.TestConfig;
 import uk.gov.companieshouse.itemgroupstatusupdater.exception.RetryableException;
 
 /**
@@ -36,6 +39,8 @@ import uk.gov.companieshouse.itemgroupstatusupdater.exception.RetryableException
  */
 @SpringBootTest
 @AutoConfigureWireMock(port = 0)
+@ActiveProfiles("test_main_positive")
+@Import(TestConfig.class)
 class PatchOrderedItemServiceIntegrationTest {
 
     @Autowired
