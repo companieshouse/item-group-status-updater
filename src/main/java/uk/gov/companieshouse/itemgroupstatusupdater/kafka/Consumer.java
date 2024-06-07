@@ -3,7 +3,7 @@ package uk.gov.companieshouse.itemgroupstatusupdater.kafka;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.kafka.annotation.RetryableTopic;
 import org.springframework.kafka.retrytopic.DltStrategy;
-import org.springframework.kafka.retrytopic.FixedDelayStrategy;
+import static org.springframework.kafka.retrytopic.SameIntervalTopicReuseStrategy.SINGLE_TOPIC;
 import org.springframework.messaging.Message;
 import org.springframework.retry.annotation.Backoff;
 import org.springframework.stereotype.Component;
@@ -43,7 +43,7 @@ public class Consumer {
             backoff = @Backoff(delayExpression = "${consumer.backoff_delay}"),
             dltTopicSuffix = "-error",
             dltStrategy = DltStrategy.FAIL_ON_ERROR,
-            fixedDelayTopicStrategy = FixedDelayStrategy.SINGLE_TOPIC,
+            sameIntervalTopicReuseStrategy = SINGLE_TOPIC,
             include = RetryableException.class
     )
     public void consume(Message<ItemGroupProcessed> message) {
