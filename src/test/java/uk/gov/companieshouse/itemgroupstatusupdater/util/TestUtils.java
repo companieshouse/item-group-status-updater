@@ -4,8 +4,11 @@ import static com.github.stefanbirkner.systemlambda.SystemLambda.withEnvironment
 import static org.junit.jupiter.api.Assertions.fail;
 import static uk.gov.companieshouse.itemgroupstatusupdater.util.TestConstants.PATCH_ORDERED_ITEM_URI;
 
+import java.time.Duration;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
+
+import org.apache.kafka.clients.consumer.Consumer;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.apache.kafka.clients.consumer.ConsumerRecords;
 import org.apache.kafka.clients.consumer.KafkaConsumer;
@@ -49,7 +52,7 @@ public class TestUtils {
             .and("PAYMENTS_API_URL", "NOT-USED")
             .and("DOCUMENT_API_LOCAL_URL", "NOT-USED")
             .execute(() -> sendAndWaitForMessage(testProducer, latch));
-        return KafkaTestUtils.getRecords(testConsumer, 10000L, 6);
+        return KafkaTestUtils.getRecords(testConsumer, Duration.ofSeconds(10L), 6);
     }
 
     private static void sendAndWaitForMessage(

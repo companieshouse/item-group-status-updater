@@ -5,7 +5,7 @@ Kafka consumer that reads from item-group-processed topic to update item group s
 
 In order to build `item-group-status-updater` locally you will need the following:
 
-- Java 11
+- Java 21
 - Maven
 - Git
 
