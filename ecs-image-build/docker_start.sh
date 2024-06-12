@@ -1,7 +1,7 @@
 #!/bin/bash
 #
-# Start script for items-group-status-updater.api.ch.gov.uk
+# Start script for items-group-status-updater
 #
 PORT=8080
 
-exec java -jar -Dserver.port="${PORT}" "items-group-status-updater.jar"
+exec java -jar -Dserver.port="${PORT}" "item-group-status-updater.jar"
