@@ -8,7 +8,7 @@ locals {
   eric_port                   = "10000"
   docker_repo                 = "item-group-status-updater"
   kms_alias                   = "alias/${var.aws_profile}/environment-services-kms"
-  lb_listener_rule_priority   = 99
+  lb_listener_rule_priority   = 23
   lb_listener_paths           = ["/item-group-status-updater/healthcheck"]
   healthcheck_path            = "/item-group-status-updater/healthcheck" #healthcheck path for item-group-status-updater
   healthcheck_matcher         = "200"
