@@ -18,13 +18,13 @@
 	<properties>
 		<maven.compiler.source>21</maven.compiler.source>
 		<maven.compiler.target>21</maven.compiler.target>
-		<spring-boot-dependencies.version>3.2.5</spring-boot-dependencies.version>
+		<spring-boot-dependencies.version>3.2.6</spring-boot-dependencies.version>
 		<start-class>uk.gov.companieshouse.itemgroupstatusupdater.ItemGroupStatusUpdaterApplication</start-class>
 
 		<!-- Docker -->
 		<jib-maven-plugin.version>3.4.1</jib-maven-plugin.version>
 
-		<spring-boot-maven-plugin.version>3.2.5</spring-boot-maven-plugin.version>
+		<spring-boot-maven-plugin.version>3.2.4</spring-boot-maven-plugin.version>
 		<sonar-maven-plugin.version>3.11.0.3922</sonar-maven-plugin.version>
 		<maven-surefire-plugin.version>3.2.5</maven-surefire-plugin.version>
 		<!-- Structured logging -->
@@ -46,6 +46,7 @@
 		<mokito-core.version>5.12.0</mokito-core.version>
 		<mokito-inline.version>5.2.0</mokito-inline.version>
 		<spring-kafka-test.version>3.2.0</spring-kafka-test.version>
+		<spring-retry.version>2.0.5</spring-retry.version>
 
 		<argLine>
 			--add-opens java.base/java.util=ALL-UNNAMED
@@ -108,6 +109,17 @@
 		<dependency>
 			<groupId>org.springframework.kafka</groupId>
 			<artifactId>spring-kafka</artifactId>
+			<exclusions>
+				<exclusion>
+					<groupId>org.springframework.retry</groupId>
+					<artifactId>spring-retry</artifactId>
+				</exclusion>
+			</exclusions>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.retry</groupId>
+			<artifactId>spring-retry</artifactId>
+			<version>${spring-retry.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>uk.gov.companieshouse</groupId>
@@ -118,6 +130,7 @@
 			<groupId>uk.gov.companieshouse</groupId>
 			<artifactId>kafka-models</artifactId>
 			<version>${kafka-models.version}</version>
+			<scope>compile</scope>
 			<exclusions>
 				<exclusion>
 					<groupId>org.apache.commons</groupId>
@@ -126,6 +139,22 @@
 				<exclusion>
 					<groupId>org.eclipse.jetty.http2</groupId>
 					<artifactId>http2-common</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>org.eclipse.jetty.http2</groupId>
+					<artifactId>http2-server</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>org.eclipse.jetty</groupId>
+					<artifactId>jetty-xml</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>org.eclipse.jetty</groupId>
+					<artifactId>jetty-client</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>org.eclipse.jetty</groupId>
+					<artifactId>jetty-webapp</artifactId>
 				</exclusion>
 			</exclusions>
 		</dependency>
@@ -168,8 +197,16 @@
 			<version>${spring-kafka-test.version}</version>
 			<exclusions>
 				<exclusion>
+					<groupId>com.fasterxml.jackson.module</groupId>
+					<artifactId>jackson-module-scala_2.13</artifactId>
+				</exclusion>
+				<exclusion>
 					<groupId>org.pcollections</groupId>
 					<artifactId>pcollections</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>org.springframework.retry</groupId>
+					<artifactId>spring-retry</artifactId>
 				</exclusion>
 			</exclusions>
 		</dependency>
