@@ -9,7 +9,7 @@ locals {
   docker_repo                 = "item-group-status-updater"
   kms_alias                   = "alias/${var.aws_profile}/environment-services-kms"
   lb_listener_rule_priority   = 23
-  lb_listener_paths           = ["/item-group-status-updater/healthcheck"]
+  lb_listener_paths           = ["/item-group-status-updater"]
   healthcheck_path            = "/item-group-status-updater/healthcheck" #healthcheck path for item-group-status-updater
   healthcheck_matcher         = "200"
   vpc_name                    = local.stack_secrets["vpc_name"]
