@@ -18,42 +18,42 @@
 	<properties>
 		<maven.compiler.source>21</maven.compiler.source>
 		<maven.compiler.target>21</maven.compiler.target>
-		<spring-boot-dependencies.version>3.3.5</spring-boot-dependencies.version>
+		<spring-boot-dependencies.version>3.5.3</spring-boot-dependencies.version>
 		<start-class>uk.gov.companieshouse.itemgroupstatusupdater.ItemGroupStatusUpdaterApplication</start-class>
 
 		<!-- Docker -->
-		<jib-maven-plugin.version>3.4.4</jib-maven-plugin.version>
+		<jib-maven-plugin.version>3.4.6</jib-maven-plugin.version>
 
-		<spring-boot-maven-plugin.version>3.3.5</spring-boot-maven-plugin.version>
-		<sonar-maven-plugin.version>4.0.0.4121</sonar-maven-plugin.version>
+		<spring-boot-maven-plugin.version>3.5.3</spring-boot-maven-plugin.version>
+		<sonar-maven-plugin.version>5.1.0.4751</sonar-maven-plugin.version>
 		<sonar.java.binaries>${project.basedir}/target</sonar.java.binaries>
+		<!--suppress UnresolvedMavenProperty -->
 		<sonar.token>${CODE_ANALYSIS_TOKEN}</sonar.token>
 		<sonar.login></sonar.login>
 		<sonar.password></sonar.password>
 		<sonar.projectKey>uk.gov.companieshouse:item-group-status-updater</sonar.projectKey>
 		<sonar.projectName>item-group-status-updater</sonar.projectName>
-		<maven-surefire-plugin.version>3.5.1</maven-surefire-plugin.version>
+		<maven-surefire-plugin.version>3.5.3</maven-surefire-plugin.version>
 		<!-- Structured logging -->
-		<structured-logging.version>3.0.20</structured-logging.version>
-		<api-sdk-manager-java-library.version>3.0.5</api-sdk-manager-java-library.version>
+		<structured-logging.version>3.0.34</structured-logging.version>
+		<api-sdk-manager-java-library.version>3.0.7</api-sdk-manager-java-library.version>
 		<system-lambda.version>1.2.1</system-lambda.version>
-		<spring-cloud-contract-wiremock.version>4.1.4</spring-cloud-contract-wiremock.version>
+		<spring-cloud-contract-wiremock.version>4.3.0</spring-cloud-contract-wiremock.version>
 
-		<test-containers.version>1.20.0</test-containers.version>
-		<kafka-models.version>3.0.8</kafka-models.version>
+		<test-containers.version>1.21.3</test-containers.version>
+		<kafka-models.version>3.0.18</kafka-models.version>
 		<ch-kafka.version>3.0.3</ch-kafka.version>
-		<handlebars.version>4.3.1</handlebars.version>
+		<handlebars.version>4.4.0</handlebars.version>
 		<skip.unit.tests>false</skip.unit.tests>
 		<skip.integration.tests>false</skip.integration.tests>
 		<sonar.coverage.jacoco.xmlReportPaths>${project.basedir}/target/site/jacoco/jacoco.xml,
 			${project.basedir}/target/site/jacoco-it/jacoco.xml
 		</sonar.coverage.jacoco.xmlReportPaths>
 		<sonar.jacoco.reports>${project.basedir}/target/site</sonar.jacoco.reports>
-		<mokito-core.version>5.14.2</mokito-core.version>
+		<mokito-core.version>5.18.0</mokito-core.version>
 		<mokito-inline.version>5.2.0</mokito-inline.version>
-		<spring-kafka-test.version>3.2.4</spring-kafka-test.version>
-		<spring-retry.version>2.0.10</spring-retry.version>
 		<avro.version>1.12.0</avro.version>
+		<opentelemetry-version>2.14.0</opentelemetry-version>
 
 		<argLine>
 			--add-opens java.base/java.util=ALL-UNNAMED
@@ -63,6 +63,13 @@
 
 	<dependencyManagement>
 		<dependencies>
+			<dependency>
+				<groupId>io.opentelemetry.instrumentation</groupId>
+				<artifactId>opentelemetry-instrumentation-bom</artifactId>
+				<version>${opentelemetry-version}</version>
+				<type>pom</type>
+				<scope>import</scope>
+			</dependency>
 			<dependency>
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-dependencies</artifactId>
@@ -84,12 +91,6 @@
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter</artifactId>
-			<exclusions>
-				<exclusion>
-					<groupId>org.yaml</groupId>
-					<artifactId>snakeyaml</artifactId>
-				</exclusion>
-			</exclusions>
 		</dependency>
 
 		<dependency>
@@ -133,39 +134,21 @@
 			<groupId>uk.gov.companieshouse</groupId>
 			<artifactId>api-sdk-manager-java-library</artifactId>
 			<version>${api-sdk-manager-java-library.version}</version>
+			<exclusions>
+				<exclusion>
+					<groupId>commons-beanutils</groupId>
+					<artifactId>commons-beanutils</artifactId>
+				</exclusion>
+			</exclusions>
 		</dependency>
+
+
 
 		<dependency>
 			<groupId>uk.gov.companieshouse</groupId>
 			<artifactId>kafka-models</artifactId>
 			<version>${kafka-models.version}</version>
 			<scope>compile</scope>
-			<exclusions>
-				<exclusion>
-					<groupId>org.apache.commons</groupId>
-					<artifactId>commons-compress</artifactId>
-				</exclusion>
-				<exclusion>
-					<groupId>org.eclipse.jetty.http2</groupId>
-					<artifactId>http2-common</artifactId>
-				</exclusion>
-				<exclusion>
-					<groupId>org.eclipse.jetty.http2</groupId>
-					<artifactId>http2-server</artifactId>
-				</exclusion>
-				<exclusion>
-					<groupId>org.eclipse.jetty</groupId>
-					<artifactId>jetty-xml</artifactId>
-				</exclusion>
-				<exclusion>
-					<groupId>org.eclipse.jetty</groupId>
-					<artifactId>jetty-client</artifactId>
-				</exclusion>
-				<exclusion>
-					<groupId>org.eclipse.jetty</groupId>
-					<artifactId>jetty-webapp</artifactId>
-				</exclusion>
-			</exclusions>
 		</dependency>
 
 		<dependency>
@@ -186,13 +169,6 @@
 			<artifactId>structured-logging</artifactId>
 			<version>${structured-logging.version}</version>
 			<scope>compile</scope>
-			<exclusions>
-				<exclusion>
-					<!-- Exclude logback to prevent multiple SLF4J binding warning -->
-					<groupId>ch.qos.logback</groupId>
-					<artifactId>logback-classic</artifactId>
-				</exclusion>
-			</exclusions>
 		</dependency>
 
 		<dependency>
@@ -205,7 +181,6 @@
 			<groupId>org.springframework.kafka</groupId>
 			<artifactId>spring-kafka-test</artifactId>
 			<scope>test</scope>
-			<version>${spring-kafka-test.version}</version>
 			<exclusions>
 				<exclusion>
 					<groupId>com.fasterxml.jackson.module</groupId>
@@ -317,6 +292,10 @@
 		<dependency>
 			<artifactId>aspectjtools</artifactId>
 			<groupId>org.aspectj</groupId>
+		</dependency>
+		<dependency>
+			<groupId>io.opentelemetry.instrumentation</groupId>
+			<artifactId>opentelemetry-spring-boot-starter</artifactId>
 		</dependency>
 	</dependencies>
 
