@@ -51,6 +51,7 @@ public class TestUtils {
             .and("CHS_API_KEY", "Token value")
             .and("PAYMENTS_API_URL", "NOT-USED")
             .and("DOCUMENT_API_LOCAL_URL", "NOT-USED")
+            .and("ORACLE_QUERY_API_URL", "NOT-USED")
             .execute(() -> sendAndWaitForMessage(testProducer, latch));
         return KafkaTestUtils.getRecords(testConsumer, Duration.ofSeconds(10L), 6);
     }
