@@ -35,7 +35,7 @@
 		<sonar.projectName>item-group-status-updater</sonar.projectName>
 		<maven-surefire-plugin.version>3.5.3</maven-surefire-plugin.version>
 		<!-- Structured logging -->
-		<structured-logging.version>3.0.34</structured-logging.version>
+		<structured-logging.version>3.0.36</structured-logging.version>
 		<api-sdk-manager-java-library.version>3.0.7</api-sdk-manager-java-library.version>
 		<system-lambda.version>1.2.1</system-lambda.version>
 		<spring-cloud-contract-wiremock.version>4.3.0</spring-cloud-contract-wiremock.version>
