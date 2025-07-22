@@ -112,6 +112,7 @@ class PatchOrderedItemServiceIntegrationTest {
             .and("CHS_API_KEY", "Token value")
             .and("PAYMENTS_API_URL", "NOT-USED")
             .and("DOCUMENT_API_LOCAL_URL", "NOT-USED")
+            .and("ORACLE_QUERY_API_URL", "NOT-USED")
             .execute(() -> serviceUnderTest.patchOrderedItem(ORDER_NUMBER, ITEM_ID, STATUS,
                 DIGITAL_DOCUMENT_LOCATION));
     }
