@@ -42,8 +42,8 @@
 
 		<test-containers.version>1.21.3</test-containers.version>
 		<kafka-models.version>3.0.18</kafka-models.version>
-		<ch-kafka.version>3.0.3</ch-kafka.version>
-		<handlebars.version>4.4.0</handlebars.version>
+		<ch-kafka.version>3.0.7</ch-kafka.version>
+		<handlebars.version>4.5.0</handlebars.version>
 		<skip.unit.tests>false</skip.unit.tests>
 		<skip.integration.tests>false</skip.integration.tests>
 		<sonar.coverage.jacoco.xmlReportPaths>${project.basedir}/target/site/jacoco/jacoco.xml,
@@ -52,7 +52,7 @@
 		<sonar.jacoco.reports>${project.basedir}/target/site</sonar.jacoco.reports>
 		<mokito-core.version>5.18.0</mokito-core.version>
 		<mokito-inline.version>5.2.0</mokito-inline.version>
-		<avro.version>1.12.0</avro.version>
+		<avro.version>1.12.1</avro.version>
 		<opentelemetry-version>2.14.0</opentelemetry-version>
         <commons.lang.version>3.19.0</commons.lang.version>
 
