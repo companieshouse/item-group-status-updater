@@ -55,6 +55,7 @@
 		<avro.version>1.12.1</avro.version>
 		<opentelemetry-version>2.14.0</opentelemetry-version>
         <commons.lang.version>3.19.0</commons.lang.version>
+		<jose4j.version>0.9.6</jose4j.version>
 
 		<argLine>
 			--add-opens java.base/java.util=ALL-UNNAMED
@@ -89,6 +90,17 @@
 	</dependencyManagement>
 
 	<dependencies>
+
+		<!-- Transitive dependencies -->
+		<!-- CVE-2024-29371 -->
+		<dependency>
+			<groupId>org.bitbucket.b_c</groupId>
+			<artifactId>jose4j</artifactId>
+			<version>${jose4j.version}</version>
+			<scope>compile</scope>
+		</dependency>
+		<!-- Transitive dependencies -->
+
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter</artifactId>
