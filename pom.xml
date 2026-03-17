@@ -106,6 +106,12 @@
 				<version>${jetty-server.version}</version>
 				<scope>compile</scope>
 			</dependency>
+			<dependency>
+				<groupId>org.eclipse.jetty</groupId>
+				<artifactId>jetty-xml</artifactId>
+				<version>${jetty-server.version}</version>
+				<scope>compile</scope>
+      		</dependency>
 		</dependencies>
 	</dependencyManagement>
 
