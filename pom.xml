@@ -58,6 +58,7 @@
 		<jose4j.version>0.9.6</jose4j.version>
 		<assertj-core.version>3.27.7</assertj-core.version>
 		<tomcat-embed-core.version>11.0.18</tomcat-embed-core.version>
+		<tomcat-embed-websocket.version>11.0.18</tomcat-embed-websocket.version>
 		<jetty-server.version>12.1.6</jetty-server.version>
 
 		<argLine>
@@ -98,6 +99,12 @@
 				<groupId>org.eclipse.jetty</groupId>
 				<artifactId>jetty-server</artifactId>
 				<version>12.1.6</version>
+			</dependency>
+			<dependency>
+				<groupId>org.eclipse.jetty</groupId>
+				<artifactId>jetty-io</artifactId>
+				<version>${jetty-server.version}</version>
+				<scope>compile</scope>
 			</dependency>
 		</dependencies>
 	</dependencyManagement>
@@ -370,6 +377,11 @@
             <version>${commons.lang.version}</version>
         </dependency>
 
+		<dependency>
+            <groupId>org.apache.tomcat.embed</groupId>
+            <artifactId>tomcat-embed-websocket</artifactId>
+            <version>${tomcat-embed-websocket.version}</version>
+        </dependency>
 
 	</dependencies>
 
