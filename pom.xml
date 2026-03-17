@@ -135,6 +135,12 @@
 				<artifactId>jetty-client</artifactId>
 				<version>${jetty-server.version}</version>
 			</dependency>
+			<dependency>
+				<groupId>org.eclipse.jetty</groupId>
+				<artifactId>jetty-session</artifactId>
+				<version>${jetty-server.version}</version>
+				<scope>compile</scope>
+      	</dependency>
 		</dependencies>
 	</dependencyManagement>
 
