@@ -6,6 +6,7 @@ import static com.github.tomakehurst.wiremock.client.WireMock.notFound;
 import static com.github.tomakehurst.wiremock.client.WireMock.patch;
 import static com.github.tomakehurst.wiremock.client.WireMock.patchRequestedFor;
 import static com.github.tomakehurst.wiremock.client.WireMock.urlEqualTo;
+import static com.github.tomakehurst.wiremock.core.WireMockConfiguration.wireMockConfig;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -26,16 +27,19 @@ import org.apache.kafka.clients.consumer.KafkaConsumer;
 import org.apache.kafka.clients.producer.KafkaProducer;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.extension.RegisterExtension;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.TestConfiguration;
-import org.springframework.boot.test.mock.mockito.SpyBean;
-import org.springframework.cloud.contract.wiremock.AutoConfigureWireMock;
+import org.springframework.test.context.bean.override.mockito.MockitoSpyBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Primary;
 import org.springframework.core.env.Environment;
 import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.DynamicPropertyRegistry;
+import org.springframework.test.context.DynamicPropertySource;
+import com.github.tomakehurst.wiremock.junit5.WireMockExtension;
 import uk.gov.companieshouse.itemgroupprocessed.ItemGroupProcessed;
 import uk.gov.companieshouse.itemgroupstatusupdater.service.ItemStatusGroupUpdaterService;
 import uk.gov.companieshouse.itemgroupstatusupdater.service.PatchOrderedItemService;
@@ -45,8 +49,18 @@ import uk.gov.companieshouse.logging.Logger;
 
 @SpringBootTest
 @ActiveProfiles("test_main_retryable")
-@AutoConfigureWireMock(port = 0)
 class ConsumerRetryableExceptionTest extends AbstractKafkaIntegrationTest {
+
+    @RegisterExtension
+    static final WireMockExtension wireMock = WireMockExtension.newInstance()
+            .options(wireMockConfig().dynamicPort())
+            .configureStaticDsl(true)
+            .build();
+
+    @DynamicPropertySource
+    static void wireMockProperties(DynamicPropertyRegistry registry) {
+        registry.add("wiremock.server.port", wireMock::getPort);
+    }
 
     @TestConfiguration
     static class Config {
@@ -70,7 +84,7 @@ class ConsumerRetryableExceptionTest extends AbstractKafkaIntegrationTest {
     @Autowired
     private CountDownLatch latch;
 
-    @SpyBean
+    @MockitoSpyBean
     private Service service;
 
     @BeforeEach
