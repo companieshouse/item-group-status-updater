@@ -8,7 +8,10 @@ import static com.github.tomakehurst.wiremock.client.WireMock.ok;
 import static com.github.tomakehurst.wiremock.client.WireMock.patch;
 import static com.github.tomakehurst.wiremock.client.WireMock.serviceUnavailable;
 import static com.github.tomakehurst.wiremock.client.WireMock.urlEqualTo;
+import static com.github.tomakehurst.wiremock.core.WireMockConfiguration.wireMockConfig;
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.allOf;
+import static org.hamcrest.Matchers.containsString;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR;
 import static org.springframework.http.HttpStatus.NOT_FOUND;
@@ -18,19 +21,21 @@ import static uk.gov.companieshouse.itemgroupstatusupdater.util.TestConstants.IT
 import static uk.gov.companieshouse.itemgroupstatusupdater.util.TestConstants.ORDER_NUMBER;
 import static uk.gov.companieshouse.itemgroupstatusupdater.util.TestConstants.PATCH_ORDERED_ITEM_URI;
 import static uk.gov.companieshouse.itemgroupstatusupdater.util.TestConstants.STATUS;
-import static uk.gov.companieshouse.itemgroupstatusupdater.util.TestUtils.getExpectedReason;
 
 import com.github.tomakehurst.wiremock.http.Fault;
-import org.hamcrest.core.Is;
+import com.github.tomakehurst.wiremock.junit5.WireMockExtension;
 import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.RegisterExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.cloud.contract.wiremock.AutoConfigureWireMock;
 import org.springframework.context.annotation.Import;
 import org.springframework.core.env.Environment;
 import org.springframework.http.HttpStatus;
 import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.DynamicPropertyRegistry;
+import org.springframework.test.context.DynamicPropertySource;
 import uk.gov.companieshouse.itemgroupstatusupdater.config.TestConfig;
 import uk.gov.companieshouse.itemgroupstatusupdater.exception.RetryableException;
 
@@ -38,10 +43,21 @@ import uk.gov.companieshouse.itemgroupstatusupdater.exception.RetryableException
  * Integration tests the {@link PatchOrderedItemService}.
  */
 @SpringBootTest
-@AutoConfigureWireMock(port = 0)
+@Tag("integration-test")
 @ActiveProfiles("test_main_positive")
 @Import(TestConfig.class)
 class PatchOrderedItemServiceIntegrationTest {
+
+    @RegisterExtension
+    static final WireMockExtension wireMock = WireMockExtension.newInstance()
+            .options(wireMockConfig().dynamicPort())
+            .configureStaticDsl(true)
+            .build();
+
+    @DynamicPropertySource
+    static void wireMockProperties(DynamicPropertyRegistry registry) {
+        registry.add("wiremock.server.port", wireMock::getPort);
+    }
 
     @Autowired
     private PatchOrderedItemService serviceUnderTest;
@@ -87,23 +103,19 @@ class PatchOrderedItemServiceIntegrationTest {
         givenThat(patch(urlEqualTo(PATCH_ORDERED_ITEM_URI))
             .willReturn(aResponse().withFault(Fault.CONNECTION_RESET_BY_PEER)));
 
-        assertOrdersApiRequestIssuePropagatedAsRetryableException(INTERNAL_SERVER_ERROR,
-            "Connection reset");
+        assertOrdersApiRequestIssuePropagatedAsRetryableException(INTERNAL_SERVER_ERROR);
     }
 
     private void assertOrdersApiRequestIssuePropagatedAsRetryableException(
         final HttpStatus underlyingStatus) {
-        assertOrdersApiRequestIssuePropagatedAsRetryableException(underlyingStatus,
-            underlyingStatus.getReasonPhrase());
-    }
-
-    private void assertOrdersApiRequestIssuePropagatedAsRetryableException(
-        final HttpStatus underlyingStatus, final String reasonPhrase) {
         final RetryableException exception =
             assertThrows(RetryableException.class,
                 this::patchOrderedItem);
         assertThat(exception.getMessage(),
-            Is.is(getExpectedReason(underlyingStatus.value(), reasonPhrase)));
+            allOf(
+                containsString("Received unexpected response status code "
+                    + underlyingStatus.value()),
+                containsString("patch ordered item at " + PATCH_ORDERED_ITEM_URI)));
     }
 
     private void patchOrderedItem() throws Exception {

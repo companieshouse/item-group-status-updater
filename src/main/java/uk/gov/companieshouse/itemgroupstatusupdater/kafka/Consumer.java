@@ -1,11 +1,11 @@
 package uk.gov.companieshouse.itemgroupstatusupdater.kafka;
 
 import org.springframework.kafka.annotation.KafkaListener;
+import org.springframework.kafka.annotation.BackOff;
 import org.springframework.kafka.annotation.RetryableTopic;
 import org.springframework.kafka.retrytopic.DltStrategy;
 import static org.springframework.kafka.retrytopic.SameIntervalTopicReuseStrategy.SINGLE_TOPIC;
 import org.springframework.messaging.Message;
-import org.springframework.retry.annotation.Backoff;
 import org.springframework.stereotype.Component;
 import uk.gov.companieshouse.itemgroupprocessed.ItemGroupProcessed;
 import uk.gov.companieshouse.itemgroupstatusupdater.exception.RetryableException;
@@ -40,7 +40,7 @@ public class Consumer {
     @RetryableTopic(
             attempts = "${consumer.max_attempts}",
             autoCreateTopics = "false",
-            backoff = @Backoff(delayExpression = "${consumer.backoff_delay}"),
+            backOff = @BackOff(delayString = "${consumer.backoff_delay}"),
             dltTopicSuffix = "-error",
             dltStrategy = DltStrategy.FAIL_ON_ERROR,
             sameIntervalTopicReuseStrategy = SINGLE_TOPIC,
