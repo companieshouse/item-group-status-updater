@@ -29,7 +29,7 @@ class ItemGroupStatusUpdaterApplicationTests {
 				"management.opentelemetry.tracing.export.otlp.endpoint"))
 				.isEqualTo("http://localhost:4318/v1/traces");
 		assertThat(environment.getProperty(
-				"management.opentelemetry.metrics.export.otlp.endpoint"))
+				"management.otlp.metrics.export.url"))
 				.isEqualTo("http://localhost:4318/v1/metrics");
 	}
 
